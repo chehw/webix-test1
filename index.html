@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   index.html
+   
+   Copyright 2021 chehw <hongwei.che@gmail.com>
+   
+   The MIT License
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy of 
+   this software and associated documentation files (the "Software"), to deal in 
+   the Software without restriction, including without limitation the rights to 
+   use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+   of the Software, and to permit persons to whom the Software is furnished to 
+   do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in all 
+   copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+   SOFTWARE.
+   
+-->
+
+<head>
+<meta charset="utf-8" />
+<title>untitled</title>
+<meta name="generator" content="Geany 1.33" />
+<!-- webix css -->
+<link rel="stylesheet" href="/webix/codebase/webix.css" type="text/css" charset="utf-8">
+<!-- MaterialDesign Webfont for icons --> 
+<link rel="stylesheet" href="/material-design/css/materialdesignicons.css" type="text/css">
+
+<!-- webix ui framework -->
+<script src="/webix/codebase/webix.js" type="text/javascript" charset="utf-8"></script>
+
+<style type="text/css">
+</style>
+
+</head>
+
+<body>
+	
+	
+<!-- functions -->
+<script type="text/javascript" charset="utf-8">
+var module_types_store  = [ ];
+var users_list_store = [ ];
+var user_list = null;
+	
+function on_module_changed(item_id) {
+	
+	$$(item_id).show();
+	
+	//~ switch(item_id) {
+	//~ case "users":
+		//~ $$('users').show();
+		//~ break;
+	//~ case "groups":
+		//~ $$('groups').show();
+		//~ break;
+	//~ case "roles":
+		//~ $$('groups').show();
+		//~ break;
+		//~ break;
+	//~ default:
+		//~ break;
+	//~ }
+	console.log("on_module_changed: " + this.getItem(item_id).value);
+}
+
+function on_selchanged_user_list(selection) {
+	console.log(selection);
+}
+</script>
+
+<!-- webix ui -->
+<script type="text/javascript" charset="utf-8">
+	webix.ready(function() {
+		user_list = {
+			view: "datatable",
+			columns: [
+				{id: "name", width: 150 },
+				{id: "phone", width: 150 },
+				{id: "email", fillspace: true }
+			],
+			select: "row",
+			drag: true,
+			dragColumn: "order",
+		//	multiselect: "touch",
+			autoHeight: true,
+			autoWidth: true,
+			url: "/users_db/users.json",
+			on: {
+				onAfterSelect: on_selchanged_user_list,
+			}
+		};
+		
+		// todo: show details of the selected user
+		var users_view = {
+			id: "users",
+			cols: [
+				user_list,
+				{ view: "resizer" },
+				{ view: "dataview"}
+			]
+		};
+		
+		var groups_view = {
+			id: "groups",
+			view: "datatable",
+			autoConfig: true,
+			data: [
+				{id: 0, name: "administrators", index: 0},
+				{id: 1, name: "users"         , index: 1},
+				{id: 2, name: "guests"        , index: 2}
+			]
+		};
+		var roles_view = {
+			id: "roles",
+			view: "datatable",
+			autoConfig: true,
+			data: [
+				{ name: "admin", roles_0: true,  roles_1: false, roles_2: false, roles_3: false, roles_4: false, roles_5: false },
+				{ name: "user1", roles_0: false, roles_1: true, roles_2: false, roles_3: true, roles_4: false, roles_5: true },
+				{ name: "user2", roles_0: false, roles_1: false, roles_2: true, roles_3: false, roles_4: false, roles_5: false },
+			]
+		};
+	
+		webix.ui({
+		rows: [
+			{ 
+				view: "toolbar", padding:3, 
+				elements: [
+					{
+						view: "icon", icon: "mdi mdi-menu", 
+						click: function(){
+							$$("$sidebar1").toggle();
+						}
+					},
+					{ view: "label", label: "User Manager Demo"},
+					{},
+					{ view: "icon", icon: "mdi mdi-comment",  badge:0},
+					{ view: "icon", icon: "mdi mdi-bell",  badge:0}
+				]
+			},
+			{ 
+				cols:[
+					{ 
+						view: "sidebar", 
+						minWidth: 120,
+						width:200, 
+						data: module_types_store, 
+						on:{
+							onAfterSelect: on_module_changed,
+						}
+					},
+					{
+						view: "multiview", 
+						id: "views",
+						animate:false,
+						cells: [
+							users_view,
+							groups_view,
+							roles_view,
+				
+						]
+					}
+					
+				]
+			}
+		]
+		});
+	});
+</script>
+
+
+<!-- data -->
+<script type="text/javascript" charset="utf-8">
+	module_types_store  = [
+		{ id: "users", icon: "mdi mdi-account", value:"Users" },
+		{ id: "groups", icon: "mdi mdi-account-group", value:"Groups" },
+		{ id: "roles", icon: "mdi mdi-shield-account", value:"Roles" },
+	];
+
+	users_list_store = [ 
+		{
+			name: "user1",
+			email: "user1@example.com",
+		},
+		{
+			name: "user2",
+			email: "user2@example.com",
+		},
+	];
+</script>
+
+</body>
+
+</html>
