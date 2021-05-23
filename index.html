@@ -54,23 +54,7 @@ var users_list_store = [ ];
 var user_list = null;
 	
 function on_module_changed(item_id) {
-	
 	$$(item_id).show();
-	
-	//~ switch(item_id) {
-	//~ case "users":
-		//~ $$('users').show();
-		//~ break;
-	//~ case "groups":
-		//~ $$('groups').show();
-		//~ break;
-	//~ case "roles":
-		//~ $$('groups').show();
-		//~ break;
-		//~ break;
-	//~ default:
-		//~ break;
-	//~ }
 	console.log("on_module_changed: " + this.getItem(item_id).value);
 }
 
@@ -84,24 +68,23 @@ function on_selchanged_user_list(selection) {
 	webix.ready(function() {
 		user_list = {
 			view: "datatable",
+			footer: true,
 			columns: [
-				{id: "name", width: 150 },
-				{id: "phone", width: 150 },
-				{id: "email", fillspace: true }
+				{id: "name", width: 150, header: [ {text: "Name"}, ], footer: [{content: "textFilter"}] },
+				{id: "phone", width: 150, header: [ {text: "Phone"},], footer: [{content: "textFilter"} ] },
+				{id: "email", fillspace: true, header: [ {text: "Email"}, ], footer: [{content: "textFilter"}] }
 			],
 			select: "row",
 			drag: true,
 			dragColumn: "order",
 		//	multiselect: "touch",
-			autoHeight: true,
-			autoWidth: true,
+		//	autoheight: true,
 			url: "users_db/users.json",
 			on: {
 				onAfterSelect: on_selchanged_user_list,
 			}
 		};
 		
-		// todo: show details of the selected user
 		var users_view = {
 			id: "users",
 			cols: [
@@ -186,17 +169,6 @@ function on_selchanged_user_list(selection) {
 		{ id: "users", icon: "mdi mdi-account", value:"Users" },
 		{ id: "groups", icon: "mdi mdi-account-group", value:"Groups" },
 		{ id: "roles", icon: "mdi mdi-shield-account", value:"Roles" },
-	];
-
-	users_list_store = [ 
-		{
-			name: "user1",
-			email: "user1@example.com",
-		},
-		{
-			name: "user2",
-			email: "user2@example.com",
-		},
 	];
 </script>
 
